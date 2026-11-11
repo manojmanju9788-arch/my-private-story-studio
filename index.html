@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Private Story Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0d14">
+</head>
+<body>
+
+    <div class="dashboard">
+
+        <aside class="sidebar">
+            <h2>📖 Story Studio</h2>
+
+            <nav>
+                <a href="#" class="active">🏠 Dashboard</a>
+                <a href="#stories">📚 My Stories</a>
+                <a href="#recent">📝 Recent Stories</a>
+            </nav>
+
+            <p class="private-label">🔒 Private Workspace</p>
+        </aside>
+
+<!-- Writing Editor -->
+
+<section class="editor-section" id="writingEditor" hidden>
+
+    <div class="editor-header">
+        <h2>✍️ Story Writing Editor</h2>
+        <button onclick="closeEditor()">Back to Stories</button>
+    </div>
+
+    <input
+        type="text"
+        id="episodeTitle"
+        placeholder="Enter Episode Title"
+    >
+
+    <div class="editor-toolbar">
+
+        <button onclick="formatText('bold')">B</button>
+
+        <button onclick="formatText('italic')">I</button>
+
+        <button onclick="formatText('underline')">U</button>
+
+        <button onclick="formatText('formatBlock', 'H1')">H1</button>
+
+        <button onclick="formatText('formatBlock', 'H2')">H2</button>
+
+        <select onchange="formatText('fontSize', this.value)">
+            <option value="3">Normal</option>
+            <option value="4">Large</option>
+            <option value="5">Extra Large</option>
+        </select>
+
+    </div>
+
+<!-- Voice Typing Controls -->
+
+<div class="voice-controls">
+
+    <select id="voiceLanguage">
+        <option value="ta-IN">Tamil</option>
+        <option value="en-IN">English</option>
+    </select>
+
+    <button onclick="startVoiceTyping()">
+        🎙️ Start Voice
+    </button>
+
+    <button onclick="stopVoiceTyping()">
+        ⏹ Stop Voice
+    </button>
+
+    <p id="voiceStatus">Voice typing is ready</p>
+
+</div>
+
+    <div
+        id="episodeContent"
+        contenteditable="true"
+        class="writing-area"
+        data-placeholder="Start writing your story here..."
+        oninput="updateWordCount()"
+    ></div>
+
+    <div class="editor-footer">
+        <p>Words: <span id="wordCount">0</span></p>
+        <p>Characters: <span id="charCount">0</span></p>
+        <p id="saveStatus">Not saved</p>
+    </div>
+
+    <button onclick="saveEpisode()">Save Episode</button>
+
+<button onclick="downloadEpisode()">
+    📥 Download Episode
+</button>
+
+<button onclick="downloadEpisodeDOCX()">
+    📄 Download as Word
+</button>
+
+</section>
+
+<!-- Story World Section -->
+<section id="storyWorld" class="editor-section" hidden>
+
+    <div class="editor-header">
+        <h2>🌍 Story World</h2>
+        <button onclick="closeStoryWorld()">Back to Dashboard</button>
+    </div>
+
+    <h3 id="worldStoryTitle">Story Details</h3>
+
+    <div class="world-menu">
+        <button onclick="showWorldSection('characters')">
+            👤 Characters
+        </button>
+
+        <button onclick="showWorldSection('places')">
+            📍 Places
+        </button>
+
+        <button onclick="showWorldSection('jewels')">
+            💎 Jewels & Objects
+        </button>
+
+        <button onclick="showWorldSection('groups')">
+            👥 Groups
+        </button>
+
+        <button onclick="showWorldSection('others')">
+    📦 Others
+</button>
+
+<button onclick="showWorldSection('characterProfiles')">
+    📋 Character Profiles
+</button>
+
+    </div>
+
+    <div id="characters" class="world-content">
+        <h3>Character Details</h3>
+        <input type="text" id="characterName" placeholder="Character Name">
+        <input type="text" id="characterAge" placeholder="Age">
+        <input type="text" id="characterRole" placeholder="Role">
+        <textarea id="characterDescription"
+            placeholder="Character appearance, personality, background..."></textarea>
+        <button onclick="addWorldItem('characters')">Add Character</button>
+        <div id="characterList"></div>
+    </div>
+
+    <div id="places" class="world-content" hidden>
+        <h3>Place Details</h3>
+        <input type="text" id="placeName" placeholder="Place Name">
+        <input type="text" id="placeType" placeholder="Place Type">
+        <textarea id="placeDescription"
+            placeholder="Describe this place..."></textarea>
+        <button onclick="addWorldItem('places')">Add Place</button>
+        <div id="placeList"></div>
+    </div>
+
+    <div id="jewels" class="world-content" hidden>
+        <h3>Jewels & Objects Details</h3>
+        <input type="text" id="jewelName" placeholder="Object or Jewel Name">
+        <input type="text" id="jewelType" placeholder="Type">
+        <textarea id="jewelDescription"
+            placeholder="History, owner, special powers..."></textarea>
+        <button onclick="addWorldItem('jewels')">Add Object</button>
+        <div id="jewelList"></div>
+    </div>
+
+    <div id="groups" class="world-content" hidden>
+        <h3>Groups & Relationships</h3>
+        <input type="text" id="groupName" placeholder="Group or Family Name">
+        <textarea id="groupDescription"
+            placeholder="Members, relationships, background..."></textarea>
+        <button onclick="addWorldItem('groups')">Add Group</button>
+        <div id="groupList"></div>
+    </div>
+<div id="others" class="world-content" hidden>
+
+    <h3>📦 Other Story Details</h3>
+
+   <select id="otherCategory" onchange="toggleCustomCategory()">
+        <option value="Magical Powers">✨ Magical Powers</option>
+        <option value="Weapons">⚔️ Weapons</option>
+        <option value="Vehicles">🚗 Vehicles</option>
+        <option value="Creatures">🐉 Creatures</option>
+        <option value="Events">🎭 Events</option>
+        <option value="Secrets">🔮 Secrets</option>
+        <option value="Custom">➕ Create New Category</option>
+    </select>
+
+    <input
+        type="text"
+        id="customCategory"
+        placeholder="Enter New Category Name"
+        hidden
+    >
+   <input type="text" id="otherPerson" placeholder="Character Name">
+
+<div id="powerContainer">
+
+    <div class="power-row">
+        <input type="text" class="powerName" placeholder="Power Name">
+        <input type="number" class="powerLevel" placeholder="Level">
+    </div>
+
+</div>
+
+<button type="button" onclick="addPowerRow()">
+    + Add Another Power
+</button>
+
+<textarea id="otherDescription" placeholder="Additional Details"></textarea>
+
+<button type="button" onclick="saveAllPowers()">
+    Save All Powers
+</button>
+<!-- Edit Powers Screen -->
+<div id="editPowerSection" hidden>
+
+    <h3>✏️ Edit Character Powers</h3>
+
+    <input
+        type="text"
+        id="editPersonName"
+        placeholder="Character Name"
+    >
+
+    <div id="editPowerContainer"></div>
+
+    <button type="button" onclick="addEditPowerRow()">
+        + Add Another Power
+    </button>
+
+    <button type="button" onclick="saveEditedPowers()">
+        💾 Save Changes
+    </button>
+
+    <button type="button" onclick="cancelEditPowers()">
+        Cancel
+    </button>
+
+</div>
+    <div id="otherList"></div>
+
+</div>
+<div id="characterProfiles" class="world-content" hidden>
+    <h3>📋 Character Profiles</h3>
+
+    <input type="file" id="characterImage" accept="image/*">
+
+    <input type="text" id="profileName" placeholder="Character Name">
+
+    <input type="number" id="profileAge" placeholder="Age">
+
+    <select id="profileGender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
+
+    <select id="profileRole">
+        <option value="">Select Role</option>
+        <option value="Hero">Hero</option>
+        <option value="Villain">Villain</option>
+        <option value="Supporting">Supporting Character</option>
+    </select>
+
+    <textarea id="profileAppearance" placeholder="Character Appearance"></textarea>
+
+    <textarea id="profilePersonality" placeholder="Personality"></textarea>
+
+    <textarea id="profileBackground" placeholder="Background Story"></textarea>
+
+    <button type="button" onclick="saveCharacterProfile()">
+        💾 Save Character Profile
+    </button>
+
+    <div id="characterProfileList"></div>
+</div>
+
+</section>
+
+        <main class="main-content">
+
+            <div class="topbar">
+                <div>
+                    <h1>My Dashboard</h1>
+                    <p>Welcome back, Writer!</p>
+                </div>
+<div class="backup-section">
+    <button onclick="exportBackup()">💾 Backup Stories</button>
+
+    <button onclick="document.getElementById('backupFile').click()">
+        📂 Restore Stories
+    </button>
+
+    <input
+        type="file"
+        id="backupFile"
+        accept=".json"
+        onchange="importBackup(event)"
+        style="display: none;"
+    >
+</div>
+                <button onclick="createStory()">
+                    + Create New Story
+                </button>
+            </div>
+
+            <section class="welcome-card">
+                <h2>Your imagination starts here ✨</h2>
+                <p>Write stories, create episodes and save your ideas in one place.</p>
+                <button onclick="createStory()">Start Writing</button>
+            </section>
+
+            <section class="stats">
+                <div class="stat-card">
+                    <h3>📚</h3>
+                    <p>Total Stories</p>
+                    <h2 id="totalStories">0</h2>
+                </div>
+
+                <div class="stat-card">
+    <h3>🎧</h3>
+    <p>Total Episodes</p>
+    <h2 id="totalEpisodes">0</h2>
+</div>
+
+                <div class="stat-card">
+                    <h3>✍️</h3>
+                    <p>Writing Space</p>
+                    <h2>Ready</h2>
+                </div>
+            </section>
+
+            <section class="ai-assistant" aria-labelledby="aiAssistantTitle">
+                <div class="ai-heading">
+                    <div>
+                        <p class="eyebrow">YOUR CREATIVE PARTNER</p>
+                        <h2 id="aiAssistantTitle">Story AI</h2>
+                        <p class="section-description">Brainstorm ideas or ask questions about one of your stories.</p>
+                    </div>
+                    <span class="ai-badge">OpenRouter</span>
+                </div>
+                <label for="aiStorySelect">Use story context</label>
+                <select id="aiStorySelect">
+                    <option value="">General writing help</option>
+                </select>
+                <div id="aiMessages" class="ai-messages" aria-live="polite">
+                    <p class="ai-welcome">Ask for plot ideas, scene feedback, character development, or story-specific details.</p>
+                </div>
+                <form id="aiChatForm" class="ai-form">
+                    <label class="sr-only" for="aiQuestion">Your question for Story AI</label>
+                    <textarea id="aiQuestion" rows="2" maxlength="4000" placeholder="What would you like help with?" required></textarea>
+                    <button id="aiSendButton" type="submit">Ask AI <span aria-hidden="true">→</span></button>
+                </form>
+                <p class="ai-disclaimer">Your prompt and selected story context are sent to OpenRouter to generate a response.</p>
+            </section>
+
+            <section class="stories-section" id="stories">
+                <h2>My Stories</h2>
+                <p class="section-description">Your personal story collection</p>
+
+                <div id="storyList" class="story-list">
+                    <div class="empty-state">
+                        <h3>No stories yet</h3>
+                        <p>Click Create New Story to begin your first story.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+<script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+
+    <script src="script.js"></script>
+
+    <script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+            .then(() => console.log("Service Worker registered"))
+            .catch(error => console.error("Service Worker error:", error));
+    });
+}
+</script>
+
+</body>
+</html>
