@@ -2,12 +2,12 @@
   "name": "My Private Story Studio",
   "short_name": "Story Studio",
   "description": "Private story writing studio",
-  "start_url": "./",
+  "start_url": "/my-private-story-studio/",
   "display": "standalone",
   "background_color": "#0b0d14",
   "theme_color": "#0b0d14",
   "orientation": "portrait",
-  "scope": "./",
+  "scope": "/my-private-story-studio/",
   "icons": [
     {
       "src": "icons/icon-192.png",
